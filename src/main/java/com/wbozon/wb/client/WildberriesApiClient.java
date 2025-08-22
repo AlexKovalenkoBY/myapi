@@ -2,12 +2,17 @@ package com.wbozon.wb.client;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.wbozon.wb.api.RateLimiter;
 // import com.wbozon.models.*;
 // import com.wbozon.wb.api.classes.*;
 import com.wbozon.wb.api.classes.ApiResponse;
 import com.wbozon.wb.api.classes.Cursor;
 import com.wbozon.wb.api.classes.ListGood;
+import com.wbozon.wb.api.classes.PriceApiResponse;
 import com.wbozon.wb.api.classes.ProductCard;
+import com.wbozon.wb.api.classes.StockEntity;
+import com.wbozon.wb.api.classes.StocksResponse;
+import com.wbozon.wb.api.classes.WareHouseEntity;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -68,7 +73,7 @@ public class WildberriesApiClient {
         String url = String.format("%s?limit=%d&offset=%d", PRICES_API_URL, limit, offset);
         HttpRequest request = buildGetRequest(url);
         PriceApiResponse response = executeRequest(request, PriceApiResponse.class, "PRICES");
-        return Optional.ofNullable(response.getData()).map(PriceApiResponse.Data::getListGoods).orElse(new ListGood[0]);
+        return Optional.ofNullable(response.getData()).map(PriceApiResponse::getData::getListGoods).orElse(new ListGood[0]);
     }
 
     public List<WareHouseEntity> fetchWarehouses() throws IOException, InterruptedException {
