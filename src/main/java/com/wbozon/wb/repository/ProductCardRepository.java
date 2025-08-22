@@ -15,7 +15,11 @@ import com.google.gson.GsonBuilder;
 import com.wbozon.wb.api.classes.ProductCard;
 
 public class ProductCardRepository {
-   private final Path filePath;
+   private final Path 
+   
+   
+   
+   filePath;
    private final Gson gson = new GsonBuilder().create();
 
    public ProductCardRepository(String filename) {
