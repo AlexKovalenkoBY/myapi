@@ -1,0 +1,37 @@
+{
+  
+  "maven.view": "hierarchical",
+  "debug.allowBreakpointsEverywhere": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "netbeans.javaSupport.enabled": true,
+  "java.configuration.maven.globalSettings": "C:\\Program Files\\Java\\maven\\conf\\settings.xml",
+  "sqltools.autoOpenSessionFiles": false,
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-21",
+      "path": "C:\\Program Files\\Java\\graalvm",
+      "default": true
+    }
+  ],
+  "rsp-ui.rsp.java.home": "",
+  "graalvm.installations": [
+    "C:\\Program Files\\Java\\graalvm"
+  ],
+  "terminal.integrated.env.windows": {
+    "JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF-8",
+    "GRAALVM_HOME": "C:\\Program Files\\Java\\graalvm",
+    "JAVA_HOME": "C:\\Program Files\\Java\\graalvm",
+    "PATH": "C:\\Program Files\\Java\\graalvm\\bin;c:\\Program Files\\Java\\graalvm\\bin;${env:PATH}",
+    "CODEPAGE": "65001"
+  },
+  "graalvm.home": "C:\\Program Files\\Java\\graalvm",
+  "java.jdt.ls.java.home": "C:\\Program Files\\Java\\graalvm",
+  "maven.terminal.customEnv": [
+    {
+      "environmentVariable": "JAVA_HOME",
+      "value": "C:\\Program Files\\Java\\graalvm"
+    }
+  ],
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx32G -Xms100m -javaagent:\"c:\\Users\\user\\.vscode\\extensions\\gabrielbb.vscode-lombok-1.0.1\\server\\lombok.jar\""
+}

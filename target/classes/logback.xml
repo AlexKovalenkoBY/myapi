@@ -1,0 +1,32 @@
+<configuration>
+
+   <!-- 📋 Логирование в консоль -->
+   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+       <encoder>
+           <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+       </encoder>
+   </appender>
+
+   <!-- 📁 Логирование в файл с ротацией -->
+   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+       <file>logs/cardsFetcher.log</file>
+
+       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+           <!-- Ежедневная ротация -->
+           <fileNamePattern>logs/cardsFetcher.%d{yyyy-MM-dd}.log</fileNamePattern>
+           <!-- Хранить максимум 30 дней -->
+           <maxHistory>30</maxHistory>
+       </rollingPolicy>
+
+       <encoder>
+           <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+       </encoder>
+   </appender>
+
+   <!-- 🔧 Уровень логирования -->
+   <root level="info">
+       <appender-ref ref="STDOUT" />
+       <appender-ref ref="FILE" />
+   </root>
+
+</configuration>

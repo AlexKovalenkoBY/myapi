@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "set-terminal-to-utf8",
+        "type": "shell",
+        "command": "chcp 65001",
+        "problemMatcher": []
+      }
+    ]
+  }
+  

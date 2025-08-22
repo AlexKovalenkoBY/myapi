@@ -1,0 +1,16 @@
+com.wbozon.wb.api
++-- client
+¦   L-- WildberriesApiClient.java
+¦   L-- HttpClientFactory.java
++-- service
+¦   L-- ProductCardService.java
+¦   L-- ProductMapper.java
+¦   L-- WarehouseService.java
++-- repository
+¦   L-- ProductCardRepository.java
++-- rate
+¦   L-- RateLimiterManager.java
++-- orchestrator
+¦   L-- ProductDataFetcher.java
++-- facade
+¦   L-- WildberriesProductFacade.java

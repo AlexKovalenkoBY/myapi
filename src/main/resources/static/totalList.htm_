@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Поиск по всем прайсам
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:href="@{webjars/bootstrap/5.3.2/css/bootstrap.min.css} " th:rel="stylesheet" />
+
+
+</head>
+
+<body>
+    <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+
+            <span class="fs-4">Поиск по всем прайсам</span>
+        </a>
+
+        <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+            <a class="me-3 py-2 text-dark text-decoration-none" href="/">На главную</a>
+
+            <!-- <a class="me-3 py-2 text-dark text-decoration-none" href="#">Support</a> -->
+
+        </nav>
+    </div>
+
+    <table id="filter">
+        <tbody>
+            <tr>
+                <td>
+
+                    <form action="checkFromTotalList" method="get">
+                        <td>
+                            <p>
+                                Наименование
+                            </p>
+                            <input type="text" id="namefilter" name="namefilter" title="Имя" th:value="${#strings.isEmpty(namefilter)} ? '' : ${namefilter}">
+
+                        </td>
+                        <td>
+                            <div>
+                                <button type="submit" class="btn btn-success mt-5">Искать</button>
+                            </div>
+                    </form>
+
+                    </td>
+                    <td>
+                        <form action="deletefiltertotal" method="get">
+                            <div>
+                                <button type="submit" class="btn btn-info mt-5">Очистить поиск</button>
+                            </div>
+                        </form>
+                    </td>
+                </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+    <table>
+        <tr>
+            <td colspan="2" th:value="${totalpositions}">
+                Всего отфильтровано:
+            </td>
+            <td th:text="${filteredcount}"> </td>
+            <td> из </td>
+            <td th:text="${totalpositions}"> </td>
+            <td></td>
+        </tr>
+    </table>
+    <table id="myTable" class="table table-striped">
+
+        <thead>
+
+            <tr class="header">
+                <th> Бренд</th>
+                <th> Артикул</th>
+                <th> Поставщик </th>
+                <th> Наименование</th>
+                <th> Количество</th>
+                <th> Цена</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr th:if="${out.empty}">
+                <td colspan="6">
+                    <H1>
+                        Введите часть названия или артикул товара для поиска </td>
+                </H1>
+            </tr>
+            <tr th:each="el : ${out}">
+
+                <!-- </tr>th:text-decoration="${el.updated?  'line-through', 'inherit')}"> -->
+                <td>
+                    <span th:text="${el.brand}"> Brand </span>
+                </td>
+                <td>
+                    <span th:text="${el.art}"> Art </span>
+                </td>
+                <td>
+                    <span th:text="${el.supplier.supplier}"> Supplier </span>
+                </td>
+
+                <td>
+                    <span th:text="${el.name}"> name </span>
+                </td>
+                <td>
+                    <span th:text="${el.amount}"> amount </span>
+                </td>
+                <td>
+                    <span th:text="${#strings.replace(#numbers.formatCurrency(el.price), '.00', '')}">  price </span>
+
+                </td>
+            </tr>
+        </tbody>
+
+
+    </table>
+
+    <script>
+        function myFunction() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("myTable");
+            tr = table.getElementsByTagName("tr");
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+
+</html>

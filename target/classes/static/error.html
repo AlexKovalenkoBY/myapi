@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{webjars/bootstrap/5.3.2/css/bootstrap.min.css} " th:rel="stylesheet" />
+    <title th:text="${message}"></title>
+</head>
+
+<body>
+    <table border="1">
+        <tr>
+            <td>Error Message</td>
+            <td th:text="${message}"></td>
+        </tr>
+        <tr>
+            <td>Status Code</td>
+            <td th:text="${status}"></td>
+        </tr>
+        <tr>
+            <td>Exception</td>
+            <td th:text="${exception}"></td>
+        </tr>
+        <tr>
+            <td>Stacktrace</td>
+            <td><pre th:text="${trace}"></pre></td>
+        </tr>
+        <tr>
+            <td>Binding Errors</td>
+            <td th:text="${errors}"></td>
+        </tr>
+    </table>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+
+</html>
