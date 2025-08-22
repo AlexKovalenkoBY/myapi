@@ -17,19 +17,19 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ComponentScan
 @EntityScan
-public class WbozonApplication implements CommandLineRunner {
+public class WbApi implements CommandLineRunner {
 
     private final BuildProperties buildProperties;
     private final ApplicationContext applicationContext;
 
-    public WbozonApplication(BuildProperties buildProperties, 
+    public WbApi(BuildProperties buildProperties, 
                            ApplicationContext applicationContext) {
         this.buildProperties = buildProperties;
         this.applicationContext = applicationContext;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(WbozonApplication.class, args);
+        SpringApplication.run(WbApi.class, args);
     }
 
     @Override

@@ -1,3 +1,8 @@
+package com.wbozon.wb.client;
+
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 import com.wbozon.wb.api.RateLimiter;
 import com.wbozon.wb.api.RetryHandler;
 

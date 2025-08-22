@@ -1,5 +1,7 @@
 package com.wbozon.wb.api;
 
+import java.util.function.Supplier;
+
 import org.apache.hc.core5.http.HttpException;
 
 public class RetryHandler {
