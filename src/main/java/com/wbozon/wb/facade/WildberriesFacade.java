@@ -43,10 +43,10 @@ public class WildberriesFacade {
 
     public void update(Instant updatedAfter) {
         long start = System.currentTimeMillis();
-        log.info("🚀 Начинаем синхронизацию карточек...");
+        log.info("🚀 Начинаем обновление карточек из product_cards.json  ...");
         service.updateCardsFromWB(updatedAfter);
         long duration = System.currentTimeMillis() - start;
-        log.info("🏁 Синхронизация карточек завершена за {} мс", duration);
+        log.info("🏁 Обновление карточек завершено за {} мс", duration);
         // Instant updatedAfter = Instant.now().minus(Duration.ofHours(24));
     }
 
