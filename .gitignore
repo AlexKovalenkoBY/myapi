@@ -33,3 +33,7 @@ build/
 .vscode/
 
 .env
+product_cards.json
+wbozon2.*.db
+logs/cardsFetcher.*.log
+logs/cardsFetcher.*

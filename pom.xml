@@ -20,7 +20,7 @@
 		<java.version>18</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.commons-io>2.19.0</version.commons-io>
-		<start-class>com.wbozon.WbozonApplication</start-class>
+		<start-class>com.wbozon.wb.Main</start-class>
 		<!-- Формат для отображения в приложении -->
 		<timestamp.display.format>dd-MM-yyyy HH:mm</timestamp.display.format>
 		<!-- Формат для совместимости с Spring Boot -->
