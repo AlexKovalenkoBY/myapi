@@ -86,7 +86,7 @@ public class WildberriesCardClient {
             JsonObject cursor = root.getAsJsonObject("cursor");
             tolalRecieved = tolalRecieved + cards.size();
             System.out.printf("\rВсего получено: %d", tolalRecieved);
-            if (tolalRecieved > MAXREQUESTCOUNT )     resetHttpClient();
+            if (tolalRecieved % MAXREQUESTCOUNT ==0)     resetHttpClient();
             if (cards == null || cards.size() == 0)
                 break;
 
