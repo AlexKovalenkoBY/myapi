@@ -1,20 +1,148 @@
 package com.wbozon.wb.service;
 
-import com.wbozon.wb.client.WildberriesApiClient;
+import com.wbozon.wb.client.WildberriesWireHousesClient;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import com.wbozon.wb.client.WildberriesPriceClient;
+import com.wbozon.wb.client.WildberriesStockClient;
+import com.wbozon.wb.api.classes.ProductCard;
+import com.wbozon.wb.api.classes.WareHouseEntity;
+import com.wbozon.wb.api.classes.StockEntity;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+@Slf4j
+@Getter
 public class WildberriesProductService {
-    private final WildberriesApiClient apiClient;
-
-    public WildberriesProductService(WildberriesApiClient apiClient) {
-        this.apiClient = apiClient;
+    private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final List<StockEntity> resultStocks = new ArrayList<>();
+    private final AtomicInteger priceProgress = new AtomicInteger(0);
+    private final AtomicInteger stockProgress = new AtomicInteger(0);
+    private final WildberriesWireHousesClient wareHousesClient;
+    private final WildberriesPriceClient priceClient;
+    private final WildberriesStockClient stockClient;
+    private final ProductCardService productCardService;
+    private final int STOCKS_BATCH_SIZE = 1000;
+    private final List<WareHouseEntity> listWareHouses = new ArrayList<>(); 
+    public WildberriesProductService(ProductCardService productCardService,
+            WildberriesWireHousesClient wareHousesClient,
+            WildberriesPriceClient priceClient,
+            WildberriesStockClient stockClient) {
+        this.productCardService = productCardService;
+        this.wareHousesClient = wareHousesClient;
+        this.priceClient = priceClient;
+        this.stockClient = stockClient;
+        updateWarehouses() ;
     }
-
+    
     public void updateWarehouses() {
         try {
-            String json = apiClient.fetchWarehouses();
-            System.out.println("Warehouses: " + json);
+            listWareHouses.addAll(wareHousesClient.fetchWarehouses());
+            
         } catch (Exception e) {
             System.err.println("Ошибка при получении складов: " + e.getMessage());
         }
     }
+
+    /*
+     * public void syncPricesAsync(String token) {
+     * List<Long> nmIDs = new
+     * ArrayList<>(productCardService.getAllCards().keySet());
+     * int batchSize = 1000;
+     * List<List<Long>> batches = partitionList(nmIDs, batchSize);
+     * 
+     * priceProgress.set(0);
+     * int total = batches.size();
+     * 
+     * List<CompletableFuture<Void>> futures = new ArrayList<>();
+     * 
+     * for (List<Long> batch : batches) {
+     * CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+     * try {
+     * Map<Long, ListGood> prices = priceClient.fetchPrices(token, batch);
+     * for (Map.Entry<Long, ListGood> entry : prices.entrySet()) {
+     * ProductCard card = productCardService.getAllCards().get(entry.getKey());
+     * if (card != null) {
+     * card.setPrice(entry.getValue().getPrice());
+     * card.setDiscount(entry.getValue().getDiscount());
+     * }
+     * }
+     * int done = priceProgress.incrementAndGet();
+     * System.out.printf("📊 Цены: %d/%d пакетов обработано%n", done, total);
+     * } catch (Exception e) {
+     * System.err.println("❌ Ошибка в пакете цен: " + e.getMessage());
+     * }
+     * }, executor);
+     * futures.add(future);
+     * }
+     * 
+     * CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+     * System.out.println("✅ Все цены загружены");
+     * }
+     */
+    public void syncStocksAsync( ) {
+        List<ProductCard> cards = new ArrayList<>(productCardService.getAllCards().values());
+        // Extract all SKUs efficiently
+        List<String> allSkus = cards.parallelStream()
+                .filter(Objects::nonNull)
+                .flatMap(card -> card.getSizes() != null ? card.getSizes().stream() : Stream.empty())
+                .filter(Objects::nonNull)
+                .flatMap(size -> size.getSkus() != null ? Arrays.stream(size.getSkus()) : Stream.empty())
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
+        stockProgress.set(0);
+        // int total = warehouses.size();
+
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (WareHouseEntity warehouse : listWareHouses) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                try {
+                    int batchSize = STOCKS_BATCH_SIZE;
+                    long batchStartTime = System.currentTimeMillis();
+                    for (int i = 0; i < allSkus.size(); i += batchSize) {
+                        List<String> batchSkus = allSkus.subList(i, Math.min(i + batchSize, allSkus.size()));
+                        List<StockEntity> stocks = stockClient.fetchStocks(warehouse.getId(), batchSkus);
+                        // stocksReceived += stocks.size();
+                        resultStocks.addAll(stocks);
+                        long batchTime = System.currentTimeMillis() - batchStartTime;
+                        if (i % 5000 == 0 || i + batchSize >= allSkus.size()) {
+                            log.debug("Warehouse {}: processed {} SKUs, received {} stocks, batch time: {} ms",
+                                    warehouse.getName(), Math.min(i + batchSize, allSkus.size()), resultStocks.size(),
+                                    batchTime);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    System.err.printf("❌ Ошибка при загрузке остатков для склада %s: %s%n", warehouse.getName(),
+                            e.getMessage());
+                }
+            }, executor);
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        System.out.println("✅ Все остатки загружены");
+    }
+
+    private <T> List<List<T>> partitionList(List<T> list, int batchSize) {
+        List<List<T>> partitions = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += batchSize) {
+            partitions.add(list.subList(i, Math.min(i + batchSize, list.size())));
+        }
+        return partitions;
+    }
+
 }

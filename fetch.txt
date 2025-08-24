@@ -1,0 +1,117 @@
+  private void fetchPricesForBatch() throws IOException, InterruptedException {
+        int offset = 0;
+        boolean hasMore = true;
+        int retryCount = 0;
+        final int MAX_RETRIES = 3;
+        final long RETRY_BASE_DELAY_MS = 1000;
+        int batchCount = 0;
+        long totalStartTime = System.currentTimeMillis();
+
+        RateLimiter rateLimiter = getRateLimiterForUrl(PRICES_API_URL);
+
+        logger.info("Starting prices fetch for approximately {} items", (totalRecievedPrices == 0 ? "all" : "updated"));
+
+        while (hasMore && !Thread.currentThread().isInterrupted()) {
+            batchCount++;
+            long batchStartTime = System.currentTimeMillis();
+            String url = String.format("%s?limit=%d&offset=%d", PRICES_API_URL, PRICES_BATCH_SIZE, offset);
+
+            try {
+                // Apply rate limiting
+                rateLimiter.acquire();
+
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("Authorization", authToken)
+                        .header("Content-Type", "application/json")
+                        .header("Accept", "application/json")
+                        .GET()
+                        .timeout(Duration.ofSeconds(TIMEOUT_SEC))
+                        .build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                long responseTime = System.currentTimeMillis() - batchStartTime;
+
+                handleRateLimitHeaders(response, rateLimiter);
+
+                if (response.statusCode() == 200) {
+                    PriceApiResponse priceResponse = gson.fromJson(response.body(), PriceApiResponse.class);
+                    ListGood[] respGoods = Optional.ofNullable(priceResponse)
+                            .map(PriceApiResponse::getData)
+                            .map(data -> data.getListGoods())
+                            .orElse(new ListGood[0]);
+
+                    if (respGoods != null && respGoods.length > 0) {
+                        int goodsCount = respGoods.length;
+
+                        // Use parallel stream for faster processing
+                        Arrays.stream(respGoods)
+                                .parallel()
+                                .filter(Objects::nonNull)
+                                .filter(good -> good.getNmID() != 0)
+                                .forEach(good -> allGoodsPrices.put(good.getNmID(), good));
+
+                        offset += goodsCount;
+                        totalRecievedPrices += goodsCount;
+                        hasMore = goodsCount >= PRICES_BATCH_SIZE;
+
+                        if (batchCount % 10 == 0 || !hasMore) {
+                            logger.info("Prices batch {}: got {} items, total: {}, offset: {}, time: {} ms",
+                                    batchCount, goodsCount, totalRecievedPrices, offset, responseTime);
+                        }
+                    } else {
+                        hasMore = false;
+                        logger.info("No more price data available");
+                    }
+
+                    retryCount = 0;
+
+                } else if (response.statusCode() == 429) {
+                    handleRateLimitExceeded(response, rateLimiter);
+
+                    if (retryCount < MAX_RETRIES) {
+                        long delay = calculateExponentialBackoff(retryCount, RETRY_BASE_DELAY_MS, 10000L);
+                        logger.warn("Rate limit exceeded (429), retrying {}/{} after {} ms",
+                                retryCount + 1, MAX_RETRIES, delay);
+
+                        Thread.sleep(delay);
+                        retryCount++;
+                        continue;
+                    } else {
+                        logger.error("Max retries exceeded for rate limiting");
+                        break;
+                    }
+                } else {
+                    logger.error("Error fetching prices (HTTP {}): {}", response.statusCode(),
+                            response.body().length() > 200 ? response.body().substring(0, 200) + "..."
+                                    : response.body());
+                    break;
+                }
+
+            } catch (Exception e) {
+                logger.error("Error in prices batch {}: {}", batchCount, e.getMessage());
+                if (retryCount < MAX_RETRIES) {
+                    long delay = calculateExponentialBackoff(retryCount, RETRY_BASE_DELAY_MS, 10000);
+                    logger.warn("Retrying {}/{} after {} ms", retryCount + 1, MAX_RETRIES, delay);
+                    Thread.sleep(delay);
+                    retryCount++;
+                    continue;
+                } else {
+                    throw e;
+                }
+            }
+
+            // Minimal delay between requests
+            long minDelay = rateLimiter.calculateDynamicDelay();
+            if (minDelay > 0) {
+                Thread.sleep(minDelay);
+            }
+        }
+
+        long totalTime = System.currentTimeMillis() - totalStartTime;
+        logger.info("Finished prices fetch. Total: {} items, time: {} ms, avg: {}/sec",
+                totalRecievedPrices, totalTime,
+                totalTime > 0 ? (totalRecievedPrices * 1000) / totalTime : 0);
+    }
+
+    
