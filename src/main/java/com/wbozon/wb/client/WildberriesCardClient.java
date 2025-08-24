@@ -4,11 +4,15 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,17 +22,52 @@ import com.google.gson.JsonObject;
 import com.wbozon.wb.api.RateLimiter;
 import com.wbozon.wb.api.classes.ProductCard;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
+@Slf4j
 public class WildberriesCardClient {
-    private final HttpClient client;
+    private static final int TIMEOUT_SEC = 60;
+    private  HttpClient client;
     private final Gson gson = new GsonBuilder().create();
     private final String token;
     private final RateLimiter limiter = new RateLimiter(200);
-
+    private final int MAXREQUESTCOUNT =90000;
     public WildberriesCardClient(String token) {
         this.token = token;
-        this.client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(60))
-                .build();
+      resetHttpClient();
+    }
+ private TrustManager[] getTrustAllCerts() {
+        return new TrustManager[] {
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+    }
+
+    private void resetHttpClient() {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, getTrustAllCerts(), new SecureRandom());
+            this.client = HttpClient.newBuilder()
+                //  .proxy(ProxySelector.of(new InetSocketAddress(PROXY_HOST, PROXY_PORT)))
+                    .sslContext(sslContext)
+                    .connectTimeout(Duration.ofSeconds(TIMEOUT_SEC))
+                    .build();
+            log.warn("🔄 HttpClient пересоздан из-за превышения лимита карточек.");
+        } catch (Exception e) {
+            log.error("❌ Ошибка при пересоздании HttpClient", e);
+        }
     }
 
     public List<ProductCard> fetchUpdatedCards(Instant updatedAfter) throws Exception {
@@ -47,7 +86,7 @@ public class WildberriesCardClient {
             JsonObject cursor = root.getAsJsonObject("cursor");
             tolalRecieved = tolalRecieved + cards.size();
             System.out.printf("\rВсего получено: %d", tolalRecieved);
-
+            if (tolalRecieved > MAXREQUESTCOUNT )     resetHttpClient();
             if (cards == null || cards.size() == 0)
                 break;
 
