@@ -42,12 +42,25 @@ public class WildberriesFacade {
     }
 
     public void update(Instant updatedAfter) {
-
+ long start = System.currentTimeMillis();
+    log.info("🚀 Начинаем синхронизацию карточек...");
+    service.updateCardsFromWB(updatedAfter);
+    long duration = System.currentTimeMillis() - start;
+    log.info("🏁 Синхронизация карточек завершена за {} мс", duration);
         // Instant updatedAfter = Instant.now().minus(Duration.ofHours(24));
-        service.updateCardsFromWB(updatedAfter);
     }
 
     public List<ProductCard> getLocalCards() {
         return service.loadLocalCards();
     }
+
+    public void syncAllStocksAndPrices() {
+    long start = System.currentTimeMillis();
+    log.info("🚀 Начинаем синхронизацию...");
+
+
+    long duration = System.currentTimeMillis() - start;
+    log.info("🏁 Синхронизация завершена за {} мс", duration);
+}
+
 }

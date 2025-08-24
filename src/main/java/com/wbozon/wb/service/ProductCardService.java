@@ -18,8 +18,10 @@ public class ProductCardService {
 
    public void updateCardsFromWB(Instant updatedAfter) {
        try {
-           List<ProductCard> cards = client.fetchUpdatedCards(updatedAfter);
-           repository.save(cards);
+        // List<ProductCard> existedCards = loadLocalCards();
+           List<ProductCard> updatedCards = client.fetchUpdatedCards(updatedAfter);
+        //    updatedCards.forEach(c->{});
+           repository.save(updatedCards);
        } catch (Exception e) {
            System.err.println("Ошибка при обновлении карточек: " + e.getMessage());
        }

@@ -37,3 +37,4 @@ product_cards.json
 wbozon2.*.db
 logs/cardsFetcher.*.log
 logs/cardsFetcher.*
+product_cards1.json

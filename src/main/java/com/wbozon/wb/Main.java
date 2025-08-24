@@ -16,6 +16,6 @@ public class Main {
         // Instant startFromZero =Instant.now().minus(startFrom());
         facade.update(startFrom);
         List<ProductCard> cards = facade.getLocalCards();
-        cards.forEach(card -> System.out.println(card.getNmID()));
+       // cards.forEach(card -> System.out.println(card.getNmID()));
     }
 }
