@@ -71,7 +71,7 @@ public class WildberriesFacade {
 
     public void syncAllStocksAndPrices() {
         long start = System.currentTimeMillis();
-        log.info("🚀 Начинаем синхронизацию...");
+        log.info("🚀 Начинаем синхронизацию остатков...");
         wildberriesProductService.syncStocksAsync();
         long duration = System.currentTimeMillis() - start;
         log.info("🏁 Синхронизация завершена за {} мс", duration);

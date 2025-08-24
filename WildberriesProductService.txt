@@ -122,7 +122,7 @@ public class WildberriesProductService {
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         for (WareHouseEntity warehouse : listWareHouses) {
-            // CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
                 try {
                     int batchSize = STOCKS_BATCH_SIZE;
                     long batchStartTime = System.currentTimeMillis();
@@ -143,11 +143,11 @@ public class WildberriesProductService {
                     System.err.printf("❌ Ошибка при загрузке остатков для склада %s: %s%n", warehouse.getName(),
                             e.getMessage());
                 }
-            // }, executor);
-            // futures.add(future);
+            }, executor);
+            futures.add(future);
         }
 
-        // CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         System.out.println("✅ Все остатки загружены");
     }
 

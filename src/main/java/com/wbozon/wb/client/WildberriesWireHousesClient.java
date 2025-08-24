@@ -17,15 +17,17 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class WildberriesWireHousesClient {
+    private static final Logger logger = Logger.getLogger(WildberriesWireHousesClient.class.getName());
     private static final String WAREHOUSES_URL = 
-        "https://suppliers-api.wildberries.ru/api/v3/warehouses?locale=ru";
+        "https://marketplace-api.wildberries.ru/api/v3/warehouses";
     private static final int TIMEOUT_SEC = 30;
 
     private final HttpClient httpClient;
-    private final RateLimiter rateLimiter = new RateLimiter(200);      // 200 ms between requests
-    private final RetryHandler retryHandler = new RetryHandler(3, 1000); // 3 attempts, 1s base delay
+    private final RateLimiter rateLimiter = new RateLimiter(200);
+    private final RetryHandler retryHandler = new RetryHandler(3, 1000);
     private final Gson gson = new GsonBuilder().create();
     private final String token;
 
@@ -36,51 +38,76 @@ public class WildberriesWireHousesClient {
                 .build();
     }
 
-    /**
-     * Fetches the list of seller warehouses via GET /api/v3/warehouses
-     * Applies rate limiting and retries on 429 or transient IO errors.
-     */
-    public List<WareHouseEntity> fetchWarehouses() {
-        // 1) Throttle by milliseconds
-        rateLimiter.acquire();
-
-        // 2) Execute with retry logic
-        return retryHandler.executeWithRetry(() -> {
+public List<WareHouseEntity> fetchWarehouses() {
+    rateLimiter.acquire();
+    
+    return retryHandler.executeWithRetry(() -> {
+        try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(WAREHOUSES_URL))
-                    .header("Authorization", token)
+                    .header("Authorization", "Bearer " + token)
+                    .header("Content-Type", "application/json")
+                    .timeout(Duration.ofSeconds(TIMEOUT_SEC))
                     .GET()
                     .build();
 
-            try {
-                HttpResponse<String> resp = httpClient.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString()
-                );
+            logger.info("Sending request to: " + WAREHOUSES_URL);
+            
+            // Исправлено: используем BodyHandlers.ofString() вместо класса
+            HttpResponse<String> resp = httpClient.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()  // Правильный обработчик
+            );
 
-                int status = resp.statusCode();
-                if (status == 200) {
-                    // parse JSON: { "data": [ {...}, {...} ], "error": false, ... }
-                    JsonObject root = gson.fromJson(resp.body(), JsonObject.class);
-                    JsonArray data = root.getAsJsonArray("data");
+            int status = resp.statusCode();
+            String responseBody = resp.body();  // Теперь это String
+                
+            logger.info("Response status: " + status);
+            logger.info("Response body: " + responseBody);
 
-                    List<WareHouseEntity> list = new ArrayList<>(data.size());
-                    for (JsonElement elem : data) {
-                        list.add(gson.fromJson(elem, WareHouseEntity.class));
+            if (status == 200) {
+                 JsonArray dataArray = gson.fromJson(responseBody, JsonArray.class);
+                   List<WareHouseEntity> list = new ArrayList<>(dataArray.size());
+                  for (JsonElement elem : dataArray) {
+                    try {
+                        WareHouseEntity warehouse = gson.fromJson(elem, WareHouseEntity.class);
+                        list.add(warehouse);
+                    } catch (Exception e) {
+                        logger.warning("Failed to parse warehouse element: " + elem.toString());
                     }
-                    return list;
-
-                } else if (status == 429) {
-                    // Too Many Requests -> propagate for retry
-                    throw new IOException("Rate limit exceeded (429)");
-                } else {
-                    throw new IOException("Unexpected HTTP status: " + status);
                 }
+                return list;
+               
 
-            } catch (IOException | InterruptedException e) {
-                // wrap into unchecked to let RetryHandler catch/retry
-                throw new RuntimeException("Error fetching warehouses: " + e.getMessage(), e);
+            } else if (status == 401) {
+                throw new IOException("Unauthorized (401) - Invalid token");
+            } else if (status == 403) {
+                throw new IOException("Forbidden (403) - No access to warehouses");
+            } else if (status == 429) {
+                throw new IOException("Rate limit exceeded (429)");
+            } else {
+                throw new IOException("Unexpected HTTP status: " + status + ", Response: " + responseBody);
             }
-        });
+
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Error in fetchWarehouses: " + e.getMessage());
+            throw new RuntimeException("Error fetching warehouses: " + e.getMessage(), e);
+        }
+    });
+}
+    // Метод для тестирования соединения
+    public boolean testConnection() {
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(WAREHOUSES_URL))
+                    .header("Authorization", "Bearer " + token)
+                    .HEAD()
+                    .build();
+            
+            HttpResponse<Void> resp = httpClient.send(request, HttpResponse.BodyHandlers.discarding());
+            return resp.statusCode() != 404 && resp.statusCode() != 403;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

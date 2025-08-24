@@ -12,11 +12,8 @@ public class Main {
         Dotenv dotenv = Dotenv.load();
         String token = dotenv.get("BY_TOKEN");
         WildberriesFacade facade = new WildberriesFacade(token, "product_cards.json");
-        facade.syncAllStocksAndPrices();
+        // facade.syncAllStocksAndPrices();
         Instant startFrom = facade.getTimeStartForUpdateInstant();
-        // Instant startFromZero =Instant.now().minus(startFrom());
         facade.update(startFrom);
-
-        int tt = 0;
-    }
+        }
 }

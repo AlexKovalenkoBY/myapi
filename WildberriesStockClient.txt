@@ -58,38 +58,36 @@ public class WildberriesStockClient {
         };
     }
 
-public List<StockEntity> fetchStocks(long warehouseId, List<String> cardsSkus) throws Exception {
-    limiter.acquire();
+    public List<StockEntity> fetchStocks(long warehouseId, List<String> cardsSkus) throws Exception {
 
-    // 1. Собираем JSON-пayload
-    JsonObject root = new JsonObject();
-    JsonArray skuArray = new JsonArray();
-    cardsSkus.forEach(skuArray::add);
-    root.add("skus", skuArray);
+        // Собираем JSON-пayload
+        JsonObject root = new JsonObject();
+        JsonArray skuArray = new JsonArray();
+        for (String sku : cardsSkus) {
+            skuArray.add(sku); // добавляем каждый SKU как JsonElement
+        }
+        root.add("skus", skuArray); // теперь можно добавить JsonArray
 
-    // 2. Формируем запрос
-    String url = String.format(URL_TEMPLATE, warehouseId);
-    HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create(url))
-        .header("Authorization", token)
-        .header("Content-Type", "application/json")
-        .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(root)))
-        .build();
+        String url = String.format(URL_TEMPLATE, warehouseId);
 
-    // 3. Отправляем с повтором при 429
-    HttpResponse<String> response = sendWithRetry(request);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Authorization", token)
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(root)))
+                .build();
 
-    // 4. Парсим ответ из поля "data", а не "stocks"
-    JsonObject json = gson.fromJson(response.body(), JsonObject.class);
-    JsonArray data = json.getAsJsonArray("data");
+        HttpResponse<String> response = sendWithRetry(request);
+        JsonObject json = gson.fromJson(response.body(), JsonObject.class);
+        JsonArray stocks = json.getAsJsonArray("stocks");
 
-    List<StockEntity> result = new ArrayList<>();
-    for (JsonElement elem : Optional.ofNullable(data).orElse(new JsonArray())) {
-        result.add(gson.fromJson(elem, StockEntity.class));
+        List<StockEntity> result = new ArrayList<>();
+        for (JsonElement elem : stocks) {
+            result.add(gson.fromJson(elem, StockEntity.class));
+        }
+
+        return result;
     }
-
-    return result;
-}
 
     private HttpResponse<String> sendWithRetry(HttpRequest request) throws Exception {
         while (true) {

@@ -196,3 +196,292 @@
 2025-08-24 20:57:52 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
 2025-08-24 20:57:52 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
 2025-08-24 20:57:52 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 20 мс
+2025-08-24 21:00:29 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 21:00:44 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 21:00:44 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 16 мс
+2025-08-24 21:20:50 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 21:21:58 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 21:21:59 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 223 мс
+2025-08-24 21:24:15 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 21:24:26 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 21:24:26 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 6 мс
+2025-08-24 21:47:14 ERROR c.w.w.s.WildberriesProductService - Ошибка при получении складов
+java.lang.RuntimeException: Error fetching warehouses: null
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:83)
+	at com.wbozon.wb.api.RetryHandler.executeWithRetry(RetryHandler.java:19)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.fetchWarehouses(WildberriesWireHousesClient.java:49)
+	at com.wbozon.wb.service.WildberriesProductService.updateWarehouses(WildberriesProductService.java:53)
+	at com.wbozon.wb.service.WildberriesProductService.<init>(WildberriesProductService.java:47)
+	at com.wbozon.wb.facade.WildberriesFacade.<init>(WildberriesFacade.java:33)
+	at com.wbozon.wb.Main.main(Main.java:14)
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:951)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:57)
+	... 6 common frames omitted
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.common.Utils.toConnectException(Utils.java:1028)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:227)
+	at java.net.http/jdk.internal.net.http.AsyncSSLConnection.connectAsync(AsyncSSLConnection.java:56)
+	at java.net.http/jdk.internal.net.http.Http2Connection.createAsync(Http2Connection.java:468)
+	at java.net.http/jdk.internal.net.http.Http2ClientImpl.getConnectionFor(Http2ClientImpl.java:134)
+	at java.net.http/jdk.internal.net.http.ExchangeImpl.get(ExchangeImpl.java:94)
+	at java.net.http/jdk.internal.net.http.Exchange.establishExchange(Exchange.java:386)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl0(Exchange.java:570)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl(Exchange.java:423)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsync(Exchange.java:415)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:413)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsyncImpl$7(MultiExchange.java:454)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:934)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandleStage(CompletableFuture.java:950)
+	at java.base/java.util.concurrent.CompletableFuture.handle(CompletableFuture.java:2372)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:444)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsync0$2(MultiExchange.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1150)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl$DelegatingExecutor.execute(HttpClientImpl.java:177)
+	at java.base/java.util.concurrent.CompletableFuture.completeAsync(CompletableFuture.java:2719)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsync(MultiExchange.java:299)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.sendAsync(HttpClientImpl.java:1047)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:930)
+	... 8 common frames omitted
+Caused by: java.nio.channels.UnresolvedAddressException: null
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:137)
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:145)
+	at java.base/sun.nio.ch.SocketChannelImpl.checkRemote(SocketChannelImpl.java:842)
+	at java.base/sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:865)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$1(PlainHttpConnection.java:210)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:212)
+	... 31 common frames omitted
+2025-08-24 21:50:36 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 21:50:37 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 21:50:37 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 5 мс
+2025-08-24 21:51:19 ERROR c.w.w.s.WildberriesProductService - Ошибка при получении складов
+java.lang.RuntimeException: Error fetching warehouses: null
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:86)
+	at com.wbozon.wb.api.RetryHandler.executeWithRetry(RetryHandler.java:19)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.fetchWarehouses(WildberriesWireHousesClient.java:47)
+	at com.wbozon.wb.service.WildberriesProductService.updateWarehouses(WildberriesProductService.java:53)
+	at com.wbozon.wb.service.WildberriesProductService.<init>(WildberriesProductService.java:47)
+	at com.wbozon.wb.facade.WildberriesFacade.<init>(WildberriesFacade.java:33)
+	at com.wbozon.wb.Main.main(Main.java:14)
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:951)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:57)
+	... 6 common frames omitted
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.common.Utils.toConnectException(Utils.java:1028)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:227)
+	at java.net.http/jdk.internal.net.http.AsyncSSLConnection.connectAsync(AsyncSSLConnection.java:56)
+	at java.net.http/jdk.internal.net.http.Http2Connection.createAsync(Http2Connection.java:468)
+	at java.net.http/jdk.internal.net.http.Http2ClientImpl.getConnectionFor(Http2ClientImpl.java:134)
+	at java.net.http/jdk.internal.net.http.ExchangeImpl.get(ExchangeImpl.java:94)
+	at java.net.http/jdk.internal.net.http.Exchange.establishExchange(Exchange.java:386)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl0(Exchange.java:570)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl(Exchange.java:423)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsync(Exchange.java:415)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:413)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsyncImpl$7(MultiExchange.java:454)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:934)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandleStage(CompletableFuture.java:950)
+	at java.base/java.util.concurrent.CompletableFuture.handle(CompletableFuture.java:2372)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:444)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsync0$2(MultiExchange.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1150)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl$DelegatingExecutor.execute(HttpClientImpl.java:177)
+	at java.base/java.util.concurrent.CompletableFuture.completeAsync(CompletableFuture.java:2719)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsync(MultiExchange.java:299)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.sendAsync(HttpClientImpl.java:1047)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:930)
+	... 8 common frames omitted
+Caused by: java.nio.channels.UnresolvedAddressException: null
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:137)
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:145)
+	at java.base/sun.nio.ch.SocketChannelImpl.checkRemote(SocketChannelImpl.java:842)
+	at java.base/sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:865)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$1(PlainHttpConnection.java:210)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:212)
+	... 31 common frames omitted
+2025-08-24 21:57:47 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 21:57:47 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 21:57:47 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 4 мс
+2025-08-24 21:58:24 ERROR c.w.w.s.WildberriesProductService - Ошибка при получении складов
+java.lang.RuntimeException: Error fetching warehouses: null
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:83)
+	at com.wbozon.wb.api.RetryHandler.executeWithRetry(RetryHandler.java:19)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.fetchWarehouses(WildberriesWireHousesClient.java:49)
+	at com.wbozon.wb.service.WildberriesProductService.updateWarehouses(WildberriesProductService.java:53)
+	at com.wbozon.wb.service.WildberriesProductService.<init>(WildberriesProductService.java:47)
+	at com.wbozon.wb.facade.WildberriesFacade.<init>(WildberriesFacade.java:33)
+	at com.wbozon.wb.Main.main(Main.java:14)
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:951)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:57)
+	... 6 common frames omitted
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.common.Utils.toConnectException(Utils.java:1028)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:227)
+	at java.net.http/jdk.internal.net.http.AsyncSSLConnection.connectAsync(AsyncSSLConnection.java:56)
+	at java.net.http/jdk.internal.net.http.Http2Connection.createAsync(Http2Connection.java:468)
+	at java.net.http/jdk.internal.net.http.Http2ClientImpl.getConnectionFor(Http2ClientImpl.java:134)
+	at java.net.http/jdk.internal.net.http.ExchangeImpl.get(ExchangeImpl.java:94)
+	at java.net.http/jdk.internal.net.http.Exchange.establishExchange(Exchange.java:386)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl0(Exchange.java:570)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl(Exchange.java:423)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsync(Exchange.java:415)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:413)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsyncImpl$7(MultiExchange.java:454)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:934)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandleStage(CompletableFuture.java:950)
+	at java.base/java.util.concurrent.CompletableFuture.handle(CompletableFuture.java:2372)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:444)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsync0$2(MultiExchange.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1150)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl$DelegatingExecutor.execute(HttpClientImpl.java:177)
+	at java.base/java.util.concurrent.CompletableFuture.completeAsync(CompletableFuture.java:2719)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsync(MultiExchange.java:299)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.sendAsync(HttpClientImpl.java:1047)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:930)
+	... 8 common frames omitted
+Caused by: java.nio.channels.UnresolvedAddressException: null
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:137)
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:145)
+	at java.base/sun.nio.ch.SocketChannelImpl.checkRemote(SocketChannelImpl.java:842)
+	at java.base/sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:865)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$1(PlainHttpConnection.java:210)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:212)
+	... 31 common frames omitted
+2025-08-24 21:58:24 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию...
+2025-08-24 22:11:52 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:11:52 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:11:52 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 5 мс
+2025-08-24 22:12:00 ERROR c.w.w.s.WildberriesProductService - Ошибка при получении складов
+java.lang.RuntimeException: Error fetching warehouses: null
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:110)
+	at com.wbozon.wb.api.RetryHandler.executeWithRetry(RetryHandler.java:19)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.fetchWarehouses(WildberriesWireHousesClient.java:44)
+	at com.wbozon.wb.service.WildberriesProductService.updateWarehouses(WildberriesProductService.java:53)
+	at com.wbozon.wb.service.WildberriesProductService.<init>(WildberriesProductService.java:47)
+	at com.wbozon.wb.facade.WildberriesFacade.<init>(WildberriesFacade.java:33)
+	at com.wbozon.wb.Main.main(Main.java:14)
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:951)
+	at java.net.http/jdk.internal.net.http.HttpClientFacade.send(HttpClientFacade.java:133)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:56)
+	... 6 common frames omitted
+Caused by: java.net.ConnectException: null
+	at java.net.http/jdk.internal.net.http.common.Utils.toConnectException(Utils.java:1028)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:227)
+	at java.net.http/jdk.internal.net.http.AsyncSSLConnection.connectAsync(AsyncSSLConnection.java:56)
+	at java.net.http/jdk.internal.net.http.Http2Connection.createAsync(Http2Connection.java:468)
+	at java.net.http/jdk.internal.net.http.Http2ClientImpl.getConnectionFor(Http2ClientImpl.java:134)
+	at java.net.http/jdk.internal.net.http.ExchangeImpl.get(ExchangeImpl.java:94)
+	at java.net.http/jdk.internal.net.http.Exchange.establishExchange(Exchange.java:386)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl0(Exchange.java:570)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsyncImpl(Exchange.java:423)
+	at java.net.http/jdk.internal.net.http.Exchange.responseAsync(Exchange.java:415)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:413)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsyncImpl$7(MultiExchange.java:454)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandle(CompletableFuture.java:934)
+	at java.base/java.util.concurrent.CompletableFuture.uniHandleStage(CompletableFuture.java:950)
+	at java.base/java.util.concurrent.CompletableFuture.handle(CompletableFuture.java:2372)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsyncImpl(MultiExchange.java:444)
+	at java.net.http/jdk.internal.net.http.MultiExchange.lambda$responseAsync0$2(MultiExchange.java:346)
+	at java.base/java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:1150)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl$DelegatingExecutor.execute(HttpClientImpl.java:177)
+	at java.base/java.util.concurrent.CompletableFuture.completeAsync(CompletableFuture.java:2719)
+	at java.net.http/jdk.internal.net.http.MultiExchange.responseAsync(MultiExchange.java:299)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.sendAsync(HttpClientImpl.java:1047)
+	at java.net.http/jdk.internal.net.http.HttpClientImpl.send(HttpClientImpl.java:930)
+	... 8 common frames omitted
+Caused by: java.nio.channels.UnresolvedAddressException: null
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:137)
+	at java.base/sun.nio.ch.Net.checkAddress(Net.java:145)
+	at java.base/sun.nio.ch.SocketChannelImpl.checkRemote(SocketChannelImpl.java:842)
+	at java.base/sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:865)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.lambda$connectAsync$1(PlainHttpConnection.java:210)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:571)
+	at java.net.http/jdk.internal.net.http.PlainHttpConnection.connectAsync(PlainHttpConnection.java:212)
+	... 31 common frames omitted
+2025-08-24 22:12:00 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию...
+2025-08-24 22:13:14 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:13:14 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:13:14 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 7 мс
+2025-08-24 22:16:43 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:16:43 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:16:43 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 7 мс
+2025-08-24 22:18:19 ERROR c.w.w.s.WildberriesProductService - Ошибка при получении складов
+com.google.gson.JsonSyntaxException: Expected a com.google.gson.JsonObject but was com.google.gson.JsonArray; at path $
+	at com.google.gson.internal.bind.TypeAdapters$34$1.read(TypeAdapters.java:1152)
+	at com.google.gson.Gson.fromJson(Gson.java:1361)
+	at com.google.gson.Gson.fromJson(Gson.java:1262)
+	at com.google.gson.Gson.fromJson(Gson.java:1171)
+	at com.google.gson.Gson.fromJson(Gson.java:1107)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.lambda$0(WildberriesWireHousesClient.java:68)
+	at com.wbozon.wb.api.RetryHandler.executeWithRetry(RetryHandler.java:19)
+	at com.wbozon.wb.client.WildberriesWireHousesClient.fetchWarehouses(WildberriesWireHousesClient.java:43)
+	at com.wbozon.wb.service.WildberriesProductService.updateWarehouses(WildberriesProductService.java:53)
+	at com.wbozon.wb.service.WildberriesProductService.<init>(WildberriesProductService.java:47)
+	at com.wbozon.wb.facade.WildberriesFacade.<init>(WildberriesFacade.java:33)
+	at com.wbozon.wb.Main.main(Main.java:14)
+2025-08-24 22:21:45 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:21:45 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:21:45 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 14 мс
+2025-08-24 22:22:24 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 22:22:48 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию...
+2025-08-24 22:25:43 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:25:43 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:25:43 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 32 мс
+2025-08-24 22:26:05 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 22:26:05 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию остатков...
+2025-08-24 22:26:50 INFO  c.wbozon.wb.facade.WildberriesFacade - 🏁 Синхронизация завершена за 44682 мс
+2025-08-24 22:26:57 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:26:57 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 1 мс
+2025-08-24 22:27:04 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем обновление карточек из product_cards.json  ...
+2025-08-24 22:27:17 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем ПОТОКОВОЕ сохранение карточек в файл ...
+2025-08-24 22:27:24 INFO  c.w.w.r.ProductCardRepository - 🏁 Потоковое сохранение карточек завершено за 7184 мс
+2025-08-24 22:27:24 INFO  c.wbozon.wb.facade.WildberriesFacade - 🏁 Обновление карточек завершено за 20319 мс
+2025-08-24 22:31:32 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:31:33 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:31:33 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 17 мс
+2025-08-24 22:31:44 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 22:31:44 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию остатков...
+2025-08-24 22:31:53 INFO  c.wbozon.wb.facade.WildberriesFacade - 🏁 Синхронизация завершена за 9122 мс
+2025-08-24 22:31:53 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:31:53 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 1 мс
+2025-08-24 22:32:01 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем обновление карточек из product_cards.json  ...
+2025-08-24 22:32:02 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем ПОТОКОВОЕ сохранение карточек в файл ...
+2025-08-24 22:32:08 INFO  c.w.w.r.ProductCardRepository - 🏁 Потоковое сохранение карточек завершено за 6718 мс
+2025-08-24 22:32:08 INFO  c.wbozon.wb.facade.WildberriesFacade - 🏁 Обновление карточек завершено за 7182 мс
+2025-08-24 22:32:23 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:32:23 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:32:23 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 15 мс
+2025-08-24 22:32:32 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 22:32:32 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию остатков...
+2025-08-24 22:34:27 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 22:34:28 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 22:34:28 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 5 мс
+2025-08-24 22:34:35 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 22:34:35 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем синхронизацию остатков...
+2025-08-24 23:34:44 WARN  c.w.wb.client.WildberriesCardClient - 🔄 HttpClient пересоздан из-за превышения лимита карточек.
+2025-08-24 23:34:44 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 23:34:44 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 4 мс
+2025-08-24 23:34:52 INFO  c.w.w.s.WildberriesProductService - Получили 2 складов
+2025-08-24 23:34:52 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем чтение карточек из файла ...
+2025-08-24 23:34:52 INFO  c.w.w.r.ProductCardRepository - 🏁 Чтение карточек из файла завершено за 0 мс
+2025-08-24 23:35:00 INFO  c.wbozon.wb.facade.WildberriesFacade - 🚀 Начинаем обновление карточек из product_cards.json  ...
+2025-08-24 23:35:01 INFO  c.w.w.r.ProductCardRepository - 🚀 Начинаем ПОТОКОВОЕ сохранение карточек в файл ...
+2025-08-24 23:35:08 INFO  c.w.w.r.ProductCardRepository - 🏁 Потоковое сохранение карточек завершено за 7157 мс
+2025-08-24 23:35:08 INFO  c.wbozon.wb.facade.WildberriesFacade - 🏁 Обновление карточек завершено за 8748 мс
